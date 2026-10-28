@@ -10,6 +10,7 @@ from django.db.models.fields import (
     SlugField,
     TextField,
 )
+from django.db.models.fields.files import ImageField
 from django.db.models.fields.related import ForeignKey
 
 User = get_user_model()
@@ -94,9 +95,30 @@ class Post(PublishedModel):
         null=True,
         blank=False,
     )
-
+    image = ImageField(
+        verbose_name="Изображение"
+    )
     class Meta:
         """Meta."""
 
         verbose_name = "публикация"
         verbose_name_plural = "Публикации"
+
+class Comment(PublishedModel):
+    """Comment model"""
+    text = TextField(verbose_name="Текст")
+
+    author = ForeignKey(
+        verbose_name="Автор комментария",
+        to=User, on_delete=CASCADE
+    )
+    post = ForeignKey(
+        verbose_name="Пост к которому относится комментарий",
+        to=Post, on_delete=CASCADE
+    )
+
+    class Meta:
+        """Meta."""
+
+        verbose_name = "комментарий"
+        verbose_name_plural = "Комментарии"

@@ -25,12 +25,16 @@ SECRET_KEY = "o1-^$i7igke0==7bje6u!d@zbs=67%ff"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
-STATIC_URL = "static/"
+STATIC_ROOT = ""
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+MEDIA_ROOT = BASE_DIR / "user_media"
+
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 # Application definition
 
 INSTALLED_APPS = [

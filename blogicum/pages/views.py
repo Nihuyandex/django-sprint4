@@ -3,14 +3,17 @@ Pages app view functions.
 
 The module provides two simple views that render static pages.
 """
-from django.shortcuts import render
+
+from django.views.generic import TemplateView
 
 
-def about(request):
+class About(TemplateView):
     """Render the *About* page."""
-    return render(request, "pages/about.html")
+
+    template_name = "pages/about.html"
 
 
-def rules(request):
+class Rules(TemplateView):
     """Render the *Rules* page."""
-    return render(request, "pages/rules.html")
+
+    template_name = "pages/rules.html"
