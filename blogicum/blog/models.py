@@ -45,6 +45,8 @@ class Category(PublishedModel):
             "символы латиницы, цифры, дефис и подчёркивание."
         ),
     )
+    def __str__(self):
+        return self.title
 
     class Meta:
         """Meta."""
@@ -57,6 +59,8 @@ class Location(PublishedModel):
     """Location model."""
 
     name = CharField(verbose_name="Название места", max_length=256)
+    def __str__(self):
+        return self.name
 
     class Meta:
         """Meta."""
@@ -98,6 +102,10 @@ class Post(PublishedModel):
     image = ImageField(
         verbose_name="Изображение"
     )
+
+    def __str__(self):
+        return f"{self.author.username}-{self.title}"
+
     class Meta:
         """Meta."""
 
@@ -116,6 +124,8 @@ class Comment(PublishedModel):
         verbose_name="Пост к которому относится комментарий",
         to=Post, on_delete=CASCADE
     )
+    def __str__(self):
+        return f"{self.post.title}-{self.author}"
 
     class Meta:
         """Meta."""

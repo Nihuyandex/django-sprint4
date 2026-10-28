@@ -14,11 +14,11 @@ from . import views
 app_name = "blog"
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("profile/", views.redirect_to_my_profile, name="profile"),
+    path("", views.IndexListView.as_view(), name="index"),
+    path("profile/", views.redirect_to_my_profile, name="my_profile"),
     path("profile/edit/", views.edit_profile, name="edit_profile"),
     path("profile/<slug:profile_slug>/", views.profile, name="profile"),
-    path("posts/<int:post_id>/", views.post_detail, name="post_detail"),
-    path("posts/create/", views.create_post, name="create_post"),
+    path("posts/<int:post_id>/", views.PostDetailView.as_view(), name="post_detail"),
+    path("posts/create/", views.CreatePostView.as_view(), name="create_post"),
     path("category/<slug:category_slug>/", views.category_posts, name="category_posts"),
 ]

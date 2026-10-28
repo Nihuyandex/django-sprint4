@@ -17,9 +17,13 @@ serves only for demonstration purposes.
 """
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.db.models.functions.datetime import Now
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView
+from django.views.generic.detail import DetailView
 
 from .models import Category, Post, User
 
@@ -32,25 +36,16 @@ def _get_published_posts_with_meta():
     )
 
 
-def index(request):
-    """Render the blog index page.
-
-    The view supplies a context containing the list of posts in
-    reverse order (newest first) and renders the ``blog/index.html``
-    template.
-    """
-    posts = _get_published_posts_with_meta()[:5]
-
-    context = {"post_list": posts}
-
-    return render(request, "blog/index.html", context)
+class IndexListView(ListView):
+    model = Post
+    ordering = "pub_date"
+    paginate_by = 10
+    template_name = "blog/index.html"
 
 
-def post_detail(request, post_id):
-    """Render a detail page for a single post."""
-    post_filtered = get_object_or_404(_get_published_posts_with_meta(), pk=post_id)
-    context = {"post": post_filtered}
-    return render(request, "blog/detail.html", context)
+class PostDetailView(DetailView):
+    model = Post
+    template_name = "blog/detail.html"
 
 
 def category_posts(request, category_slug):
@@ -65,17 +60,16 @@ def category_posts(request, category_slug):
     return render(request, "blog/category.html", context)
 
 
-@login_required
-def create_post(request):
-    return render(request, "blog/create.html")
+class CreatePostView(CreateView, LoginRequiredMixin):
+    model = Post
+    fields = "__all__"
+    template_name = "blog/create.html"
+    success_url =  reverse_lazy('blog:my_profile')
 
 
 @login_required
 def redirect_to_my_profile(request):
-    username = request.user.username
-    user = get_object_or_404(User, username=username)
-    context = {"user": user}
-    return redirect(request, f"profile/{username}", context)
+    return redirect(request, f"profile/{request.user.username}")
 
 
 def profile(request, profile_slug):
