@@ -45,6 +45,7 @@ class Category(PublishedModel):
             "символы латиницы, цифры, дефис и подчёркивание."
         ),
     )
+
     def __str__(self):
         return self.title
 
@@ -59,6 +60,7 @@ class Location(PublishedModel):
     """Location model."""
 
     name = CharField(verbose_name="Название места", max_length=256)
+
     def __str__(self):
         return self.name
 
@@ -81,10 +83,7 @@ class Post(PublishedModel):
             "можно делать отложенные публикации."
         ),
     )
-    author = ForeignKey(
-        verbose_name="Автор публикации",
-        to=User, on_delete=CASCADE
-    )
+    author = ForeignKey(verbose_name="Автор публикации", to=User, on_delete=CASCADE)
     location = ForeignKey(
         verbose_name="Местоположение",
         to=Location,
@@ -100,7 +99,9 @@ class Post(PublishedModel):
         blank=False,
     )
     image = ImageField(
-        verbose_name="Изображение"
+        verbose_name="Изображение",
+        upload_to="posts_images",
+        blank=True,
     )
 
     def __str__(self):
@@ -111,19 +112,22 @@ class Post(PublishedModel):
 
         verbose_name = "публикация"
         verbose_name_plural = "Публикации"
+        ordering = ("-pub_date",)
+
 
 class Comment(PublishedModel):
-    """Comment model"""
+    """Comment model."""
+
     text = TextField(verbose_name="Текст")
 
-    author = ForeignKey(
-        verbose_name="Автор комментария",
-        to=User, on_delete=CASCADE
-    )
+    author = ForeignKey(verbose_name="Автор комментария", to=User, on_delete=CASCADE)
     post = ForeignKey(
-        verbose_name="Пост к которому относится комментарий",
-        to=Post, on_delete=CASCADE
+        verbose_name="Пост, к которому относится комментарий",
+        to=Post,
+        on_delete=CASCADE,
+        related_name="comments",
     )
+
     def __str__(self):
         return f"{self.post.title}-{self.author}"
 
@@ -132,3 +136,4 @@ class Comment(PublishedModel):
 
         verbose_name = "комментарий"
         verbose_name_plural = "Комментарии"
+        ordering = ("created_at",)
