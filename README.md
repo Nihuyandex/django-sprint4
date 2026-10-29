@@ -8,5 +8,6 @@
 
 
 With DEBUG = False it won't show you images
+
 With DEBUG = True you won't see custom error pages
 choose wisely)
