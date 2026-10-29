@@ -45,10 +45,14 @@ class IndexListView(ListView):
 
 class CreatePostView(CreateView, LoginRequiredMixin):
     model = Post
-    fields = "__all__"
+    fields = ("title","text","pub_date","location","category","image")
     template_name = "blog/create.html"
     success_url = reverse_lazy("blog:my_profile")
-
+    def form_valid(self, form):
+        user = self.request.user
+        user = get_object_or_404(User, username=user.get_username())
+        form.instance.author = user
+        return super().form_valid(form)
 
 class PostDetailView(DetailView):
     model = Post
