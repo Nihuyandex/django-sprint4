@@ -25,7 +25,7 @@ SECRET_KEY = "o1-^$i7igke0==7bje6u!d@zbs=67%ff"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 STATIC_ROOT = ""
 STATIC_URL = "/static/"
@@ -33,8 +33,16 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 MEDIA_ROOT = BASE_DIR / "user_media"
+MEDIA_URL = "/media/"
 
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+
+CSRF_FAILURE_VIEW = "pages.views.csrf_failure"
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "blog:index"
+
 # Application definition
 
 INSTALLED_APPS = [
